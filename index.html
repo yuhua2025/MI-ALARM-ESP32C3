@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小米闹钟 · ESP32-C3 固件在线烧录</title>
+  <meta name="description" content="自制 ESP32-C3 小米闹钟复刻版：四位七段显示、DS1302 走时、5 组闹钟、整点报时与网页配网。插上 USB，用浏览器一键烧录固件。">
+  <meta name="theme-color" content="#f5f5f7">
+  <meta property="og:title" content="小米闹钟 · ESP32-C3 固件在线烧录">
+  <meta property="og:description" content="浏览器直接烧录，无需安装 esptool。固件 v3.15。">
+  <meta property="og:image" content="assets/img/hero-clock.jpg">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <noscript><style>.reveal{opacity:1 !important;transform:none !important}</style></noscript>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="16" fill="#ff6b00"/>
+        <circle cx="32" cy="32" r="19" fill="none" stroke="#fff" stroke-width="4"/>
+        <path d="M32 21v12l8 5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      XiaoMiClock
+    </a>
+    <nav class="nav-links" aria-label="页面导航">
+      <a href="#flash">固件烧录</a>
+      <a href="#gallery">图集</a>
+      <a href="#features">功能</a>
+      <a href="#hardware">硬件</a>
+      <a href="#faq">常见问题</a>
+      <a class="btn btn-primary" href="#flash">开始烧录</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="dot"></span> 自制硬件 · ESP32-C3</span>
+        <h1>把一块 PCB，<br>做成<em>会报时的闹钟</em></h1>
+        <p class="lede">
+          复刻经典小米闹钟：四位七段显示屏、DS1302 独立走时、5 组闹钟、整点报时与网页配网。
+          插上 USB，用浏览器就能把固件写进设备。
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#flash">在线烧录固件</a>
+          <a class="btn btn-ghost" href="#hardware">查看硬件细节</a>
+        </div>
+        <div class="hero-stats">
+          <div><b>v3.15</b><span>当前固件</span></div>
+          <div><b>5 组</b><span>独立闹钟</span></div>
+          <div><b>4 种</b><span>可选铃声</span></div>
+          <div><b>7 级</b><span>屏幕亮度</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <img src="assets/img/hero-clock.jpg" alt="小米闹钟复刻版桌面实拍" width="1400" height="932" fetchpriority="high">
+          <div class="hero-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+              <rect x="4" y="4" width="16" height="16" rx="2"/>
+              <path d="M8 9h1M8 12h1M8 15h1M15 9h1M15 12h1M15 15h1M11 9v6"/>
+            </svg>
+            TM1652 四位七段 · 自制 PCB
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="flash">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="kicker">Firmware</span>
+        <h2>在线烧录固件</h2>
+        <p>全部在浏览器里完成，无需安装任何工具。固件由浏览器直接写入设备，不会上传你的数据。推荐使用电脑版 Chrome 或 Edge，并用 USB-C 数据线连接设备。</p>
+      </div>
+
+      <div class="flash-card reveal">
+        <div class="flash-top">
+          <div>
+            <h3>选择固件</h3>
+            <p class="muted">当前发布版本 v3.15 · 2026-11-08</p>
+          </div>
+          <span class="status-pill">已实测可用</span>
+        </div>
+
+        <ol class="steps">
+          <li class="step">
+            <span class="n">1</span>
+            <div>
+              <b>连接设备</b>
+              <p>USB-C 数据线连接电脑与闹钟</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="n">2</span>
+            <div>
+              <b>选择固件</b>
+              <p>首次烧录用完整固件，日常升级用应用固件</p>
+            </div>
+          </li>
+          <li class="step">
+            <span class="n">3</span>
+            <div>
+              <b>点击烧录</b>
+              <p>在弹窗中确认串口并等待写入完成</p>
+            </div>
+          </li>
+        </ol>
+
+        <div class="fw-options" role="radiogroup" aria-label="固件类型">
+          <label class="fw-card is-selected" data-manifest="manifests/full.json">
+            <input type="radio" name="firmware" value="full" checked>
+            <div class="fw-head">
+              <div class="fw-title">
+                <span class="fw-badge">首次推荐</span>
+                <b>完整固件</b>
+              </div>
+              <span class="fw-check" aria-hidden="true"></span>
+            </div>
+            <p>包含 bootloader、分区表与应用，整片写入 0x0。适用于新板、换板或恢复出厂。</p>
+            <div class="fw-meta">
+              <span>4.0 MB</span>
+              <span>偏移 0x0</span>
+              <span>会清空 WiFi 与设置</span>
+            </div>
+            <div class="fw-sha">
+              <code title="a605cce8f94997f26b42567856617b5c48a5467286aee87083e1136c7b34a71b">SHA-256 a605cce8…34a71b</code>
+              <button type="button" class="copy" data-copy="a605cce8f94997f26b42567856617b5c48a5467286aee87083e1136c7b34a71b">复制</button>
+            </div>
+          </label>
+
+          <label class="fw-card" data-manifest="manifests/app.json">
+            <input type="radio" name="firmware" value="app">
+            <div class="fw-head">
+              <div class="fw-title">
+                <b>应用固件</b>
+              </div>
+              <span class="fw-check" aria-hidden="true"></span>
+            </div>
+            <p>只更新应用程序，写入 0x10000。要求设备已烧过本固件，升级后保留全部设置。</p>
+            <div class="fw-meta">
+              <span>1.03 MB</span>
+              <span>偏移 0x10000</span>
+              <span>保留 WiFi 与设置</span>
+            </div>
+            <div class="fw-sha">
+              <code title="4a7124d925ce88eba91167f27d7a9d3285b565a6c5a2ca7427cdf7c1724123f5">SHA-256 4a7124d9…4123f5</code>
+              <button type="button" class="copy" data-copy="4a7124d925ce88eba91167f27d7a9d3285b565a6c5a2ca7427cdf7c1724123f5">复制</button>
+            </div>
+          </label>
+        </div>
+
+        <div class="flash-action">
+          <div class="install-wrap">
+            <esp-web-install-button id="installer" manifest="manifests/full.json">
+              <button slot="activate" class="btn btn-primary btn-lg flash-btn" type="button">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+                  <path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>
+                </svg>
+                连接设备并烧录
+              </button>
+              <span slot="unsupported" class="install-msg">
+                当前浏览器不支持 Web Serial。请改用电脑版 Chrome、Edge 或 Opera，Safari 与手机浏览器无法烧录。
+              </span>
+              <span slot="not-allowed" class="install-msg">
+                网页需要通过 HTTPS 或 localhost 访问才能连接串口，请使用部署后的正式地址。
+              </span>
+            </esp-web-install-button>
+          </div>
+          <div class="flash-hint" id="flashHint">将烧录：<b>完整固件</b> · 4.0 MB · 0x0</div>
+        </div>
+
+        <p class="fine-print">
+          烧录过程请保持 USB 连接不要断开。烧录完成后设备会自动重启；首次使用会开启 <b>XiaoMiClock</b> 热点，手机连上后打开
+          192.168.4.1 完成配网。Windows 10/11 与 macOS 通常无需额外安装串口驱动。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="gallery">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="kicker">Gallery</span>
+        <h2>从 PCB 到桌面</h2>
+        <p>主板、实拍、网页设置和等待配网动画。点击任意图片查看大图。</p>
+      </div>
+
+      <div class="gallery">
+        <figure class="gallery-item reveal" data-full="assets/img/pcb-3d.png" tabindex="0" role="button" aria-label="查看 PCB 3D 渲染大图">
+          <img src="assets/img/pcb-3d.png" alt="ESP32-C3 闹钟 PCB 3D 渲染" width="1600" height="983" loading="lazy">
+          <figcaption>
+            <b>PCB 3D 渲染</b>
+            <span>ESP32-C3 · TM1652 灯板 · DS1302 · PAM8403</span>
+          </figcaption>
+        </figure>
+
+        <figure class="gallery-item reveal" data-full="assets/img/clock-desk.jpg" tabindex="0" role="button" aria-label="查看桌面实拍大图">
+          <img src="assets/img/clock-desk.jpg" alt="夜晚桌面上的小米闹钟" width="1920" height="945" loading="lazy">
+          <figcaption>
+            <b>桌面实拍</b>
+            <span>白色外壳，复刻原机造型与屏显</span>
+          </figcaption>
+        </figure>
+
+        <figure class="gallery-item tall reveal" data-full="assets/img/web-ui.jpg" tabindex="0" role="button" aria-label="查看网页设置页大图">
+          <img src="assets/img/web-ui.jpg" alt="手机浏览器中的闹钟设置页" width="800" height="2407" loading="lazy">
+          <figcaption>
+            <b>网页设置页</b>
+            <span>亮度、夜间调暗、闹钟、铃声与校时</span>
+          </figcaption>
+        </figure>
+
+        <figure class="gallery-item reveal" data-full="assets/img/pairing.gif" tabindex="0" role="button" aria-label="查看配网等待动画">
+          <img src="assets/img/pairing.gif" alt="等待配网时的 -:- 与 0:0 动画" width="600" height="450" loading="lazy">
+          <figcaption>
+            <b>等待配网动画</b>
+            <span>中间两位在「短横条」和「0」之间切换</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="kicker">Features</span>
+        <h2>一块表该有的功能</h2>
+        <p>固件从 v2.0 重写至今，功能都经过实机验证。</p>
+      </div>
+
+      <div class="features">
+        <article class="feature reveal">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="14" rx="2"/>
+              <path d="M7 9h1M7 12h1M7 15h1M12 9v6M17 9h1M17 12h1M17 15h1"/>
+            </svg>
+          </div>
+          <h3>四位七段显示</h3>
+          <p>TM1652 单线驱动，7 级亮度，夜间时段自动调暗。铃铛、静音、闹钟、AM/PM 与 WiFi 图标齐全。</p>
+        </article>
+
+        <article class="feature reveal">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="8"/>
+              <path d="M12 7v5l3 2"/>
+            </svg>
+          </div>
+          <h3>DS1302 精准走时</h3>
+          <p>CR2032 后备电池，断电不走时。联网后自动 NTP 校时，并每 6 小时同步一次。</p>
+        </article>
+
+        <article class="feature reveal">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/>
+              <path d="M10 19a2 2 0 0 0 4 0"/>
+            </svg>
+          </div>
+          <h3>最多 5 组闹钟</h3>
+          <p>每组独立开关、时间与星期重复。响铃 60 秒超时，贪睡可选 0 / 3 / 5 / 10 分钟。</p>
+        </article>
+
+        <article class="feature reveal">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 10v4M7 8v8M10 6v12M13 9v6M16 7v10M19 10v4"/>
+            </svg>
+          </div>
+          <h3>整点报时</h3>
+          <p>按广播授时规矩从 :59:55 起响，5.2 秒后压在整点。可设定允许报时的时段，支持跨零点。</p>
+        </article>
+
+        <article class="feature reveal">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 18V6l10-2v12"/>
+              <circle cx="6.5" cy="18.5" r="2.5"/>
+              <circle cx="16.5" cy="16.5" r="2.5"/>
+            </svg>
+          </div>
+          <h3>四种可选铃声</h3>
+          <p>上行三音、广播报时、电子急促与木琴。闹钟和整点报时分开选择，音量 1~10 档。</p>
+        </article>
+
+        <article class="feature reveal">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+              <path d="M3 9a12 12 0 0 1 18 0M6.5 12.5a7 7 0 0 1 11 0M10 16a3 3 0 0 1 4 0"/>
+              <circle cx="12" cy="19" r="1"/>
+            </svg>
+          </div>
+          <h3>网页配网与设置</h3>
+          <p>手机连上 XiaoMiClock 热点，浏览器打开 192.168.4.1 即可配网。所有设置存 NVS，断电不丢。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="hardware">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="kicker">Hardware</span>
+        <h2>硬件一览</h2>
+        <p>ESP32-C3 主控搭配 TM1652 灯板、DS1302 时钟与 PAM8403 功放，全部元件手工焊接。</p>
+      </div>
+
+      <div class="hardware-grid">
+        <div class="hardware-visual reveal">
+          <img src="assets/img/pcb-3d.png" alt="闹钟 PCB 3D 渲染：ESP32-C3、CR2032 电池座、USB-C 与音频接口" width="1600" height="983" loading="lazy">
+        </div>
+        <div class="hardware-specs reveal">
+          <h3>ESP32-C3 自制主板</h3>
+          <p>单板集成主控、走时、灯板驱动和音频功放。USB-C 原生 USB CDC，烧录与串口日志共用一根线。</p>
+          <div class="spec-table">
+            <div class="spec-row"><span>主控</span><span>ESP32-C3 · RISC-V · Wi-Fi 2.4G + BLE 5</span></div>
+            <div class="spec-row"><span>显示</span><span>TM1652 四位七段 LED + 图标</span></div>
+            <div class="spec-row"><span>走时</span><span>DS1302Z + CR2032 后备电池</span></div>
+            <div class="spec-row"><span>音频</span><span>PAM8403 + 4Ω 3W 喇叭</span></div>
+            <div class="spec-row"><span>接口</span><span>USB-C（原生 USB CDC）</span></div>
+            <div class="spec-row"><span>存储</span><span>4 MB Flash · NVS 保存设置</span></div>
+            <div class="spec-row"><span>按键</span><span>主键 GPIO2 · 副键 GPIO10 · BOOT GPIO9</span></div>
+          </div>
+          <div class="pin-chips">
+            <span><b>RTC</b> 4 / 5 / 7</span>
+            <span><b>TM1652</b> 6</span>
+            <span><b>音频</b> 8</span>
+            <span><b>按键</b> 2 / 10</span>
+            <span><b>USB</b> 18 / 19</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cta-band reveal">
+        <div class="cta-content">
+          <h2>插上 USB，三步完成烧录</h2>
+          <p>不需要安装 Arduino、esptool 或任何驱动。浏览器里点一下，固件就写进设备。</p>
+          <a class="btn btn-light btn-lg" href="#flash">去烧录固件</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="kicker">FAQ</span>
+        <h2>常见问题</h2>
+        <p>烧录或配网遇到问题时，先看这里。</p>
+      </div>
+
+      <div class="faq reveal">
+        <details>
+          <summary>浏览器里找不到串口怎么办？</summary>
+          <div class="answer">
+            先确认用的是<b>数据线</b>而不是只能充电的线；再换一个 USB 口试试。如果设备没有自动进入下载模式，按住 BOOT 键、
+            点一下 RESET 再松开，然后重新点击烧录。Windows 10/11 与 macOS 一般无需额外驱动。
+          </div>
+        </details>
+        <details>
+          <summary>烧录失败或校验不过？</summary>
+          <div class="answer">
+            多数是线材或 USB 口问题。换一根短一点的数据线，直连电脑而不是经过扩展坞。仍然失败时可以多试一次，
+            或在烧录弹窗中降低波特率。若设备之前从未烧过本固件，请选择<b>完整固件</b>而不是应用固件。
+          </div>
+        </details>
+        <details>
+          <summary>手机或 iPad 可以烧录吗？</summary>
+          <div class="answer">
+            不可以。Web Serial 只在桌面版 Chrome、Edge、Opera 中可用，Safari 与所有手机浏览器都不支持。
+            配网和日常设置则可以用手机浏览器完成。
+          </div>
+        </details>
+        <details>
+          <summary>烧录会清空我原来的设置吗？</summary>
+          <div class="answer">
+            <b>完整固件</b>会整片写入，WiFi 密码和所有设置都会被清空，开机后需要重新配网；<b>应用固件</b>只写
+            0x10000 的应用分区，不会动 NVS，升级后设置和 WiFi 都会保留。
+          </div>
+        </details>
+        <details>
+          <summary>烧完之后怎么配网？</summary>
+          <div class="answer">
+            设备首次启动会开启无密码热点 <code>XiaoMiClock</code>。手机连上它，浏览器打开
+            <code>192.168.4.1</code>，选择家里的 2.4GHz WiFi 并输入密码。连接成功后热点会自动关闭，
+            之后用路由器分配的地址打开设置页即可。
+          </div>
+        </details>
+        <details>
+          <summary>为什么应用固件要烧到 0x10000？</summary>
+          <div class="answer">
+            ESP32-C3 的 bootloader 在 0x0、分区表在 0x8000、应用分区从 0x10000 开始。应用固件只包含程序本身，
+            因此必须写到 0x10000；完整固件已经把三者合并成一个 4 MB 镜像，写到 0x0 即可。
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="16" fill="#ff6b00"/>
+        <circle cx="32" cy="32" r="19" fill="none" stroke="#fff" stroke-width="4"/>
+        <path d="M32 21v12l8 5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      XiaoMiClock
+    </a>
+    <div class="footer-meta">
+      <span>固件 v3.15</span>
+      <span>ESP32-C3 · 4 MB</span>
+      <span>Made by Dayu</span>
+      <span>基于 esp-web-tools</span>
+    </div>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="查看大图">
+  <button class="lightbox-close" type="button" aria-label="关闭">✕</button>
+  <img src="" alt="">
+</div>
+
+<script type="module" src="js/esp-web-tools/install-button.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

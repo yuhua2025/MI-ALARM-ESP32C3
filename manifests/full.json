@@ -1,0 +1,17 @@
+{
+  "name": "XiaoMiClock 完整固件",
+  "version": "3.15",
+  "home_assistant_domain": "esphome",
+  "new_install_prompt_erase": false,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C3",
+      "parts": [
+        {
+          "path": "../firmware/XiaoMiClock_v3.15_merged.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}
